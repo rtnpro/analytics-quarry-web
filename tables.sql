@@ -44,7 +44,7 @@ CREATE TABLE query_run(
     status TINYINT UNSIGNED NOT NULL DEFAULT 0,
     timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     task_id VARCHAR(36) BINARY,
-    extra_info TEXT BINARY,
+    extra_info TEXT BINARY
 );
 CREATE INDEX query_run_status_index ON query_run(status);
 
