@@ -24,7 +24,7 @@ class RangeBasedPagination(object):
         self.limit = abs(limit)
         self.direction = 'next' if limit >= 0 else 'prev'
         self.base_url = base_url
-        self.referrer_url = referrer_url
+        self.referrer_url = referrer_url or ''
 
     def paginate(self):
         """

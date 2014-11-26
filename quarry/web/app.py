@@ -309,18 +309,24 @@ def api_run_query():
     })
 
 
-@app.route("/query/runs/all")
-def all_query_runs():
+@app.route("/query/runs/<query_filter>")
+def query_runs(query_filter):
+    if query_filter not in ['all', 'published']:
+        return "Page not found!", 404
     queries = g.conn.session.query(Query)\
         .join(Query.latest_rev).join(QueryRevision.latest_run)
+    if query_filter == 'published':
+        queries = queries.filter(Query.published)
     limit = int(request.args.get(
         'limit', app.config.get('QUERY_RESULTS_PER_PAGE', 50)))
     queries, prev_link, next_link = QueriesRangeBasedPagination(
         queries, request.args.get('from'), limit,
-        '/query/runs/all', request.referrer).paginate()
+        '/query/runs/{query_filter}'.format(query_filter=query_filter),
+        request.referrer).paginate()
     return render_template(
         "query/list.html", user=get_user(), queries=queries,
-        prev_link=prev_link, next_link=next_link)
+        prev_link=prev_link, next_link=next_link,
+        query_filter=query_filter)
 
 
 @app.route('/run/<int:qrun_id>/status')
